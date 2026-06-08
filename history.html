@@ -58,7 +58,7 @@
             background-color: transparent !important;
         }
         #menu-btn-check:checked ~ .menu-btn span::before {
-            bottom: 0 !important;
+            break-bottom: 0 !important;
             transform: rotate(45deg) !important;
         }
         #menu-btn-check:checked ~ .menu-btn span::after {
@@ -88,6 +88,12 @@
             padding: 100px 20px 40px 20px !important;
         }
     </style>
+    <!-- 🔐 未ログインなら、この実績ページを一切見せずにホームへ突き返す命令 -->
+    <script>
+        if (localStorage.getItem('loginStatus') !== 'passed') {
+            window.location.replace("index.html");
+        }
+    </script>
 </head>
 <body>
 
@@ -114,7 +120,7 @@
     <main>
         <section>
             <h2>これまでの歩み</h2>
-            <p>ここに過去のコンクール結果や、定期演奏会の歴史を書き込んでいきます。</p>
+            <p>ここに過去のコンクール結果や、定期演奏会の歴史を書き込んでしていきます。</p>
             
             <p style="text-align: center; margin-top: 40px;">
                 <a href="index.html" style="color: #6b1426; font-weight: bold;">← トップページに戻る</a>

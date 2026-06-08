@@ -155,7 +155,7 @@
             opacity: 0.9;
         }
 
-        /* 目の外枠（まぶたのライン）：水平・左右対称 */
+        /* 目の外枠：水平・左右対称 */
         .eye-icon {
             position: relative !important;
             width: 22px !important;   
@@ -166,7 +166,7 @@
             border-bottom-left-radius: 100% 120% !important;
             border-bottom-right-radius: 100% 120% !important;
         }
-        /* 黒目（真ん中の丸） */
+        /* 黒目 */
         .eye-icon::before {
             content: '' !important;
             position: absolute !important;
@@ -178,7 +178,7 @@
             left: 50% !important;
             transform: translate(-50%, -50%) !important;
         }
-        /* 斜線イラスト（表示時にかかる一本線） */
+        /* 斜線イラスト */
         .eye-icon.hidden-line::after {
             content: '' !important;
             position: absolute !important;
@@ -218,6 +218,57 @@
             margin-top: 10px !important;
             font-weight: bold !important;
             display: none; 
+        }
+
+        /* 🎨 【修正】ブログエリアのデザインを他と統一（白背景） */
+        .blog-section {
+            background-color: #ffffff !important; /* 他のセクションと同じ純粋な白に変更 */
+            padding: 40px 20px !important;
+            margin: 30px auto !important;
+            max-width: 800px !important;
+            border-radius: 12px !important;
+            /* 影（シャドウ）を他のセクションの雰囲気と統一 */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important;
+        }
+        .blog-container {
+            margin-top: 25px !important;
+        }
+        /* 各ブログ記事のカードデザイン */
+        .blog-card {
+            background-color: #ffffff !important;
+            border-left: 5px solid #6b1426 !important; /* 吹奏楽部のえんじ色 */
+            padding: 20px !important;
+            margin-bottom: 20px !important;
+            border-radius: 0 8px 8px 0 !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
+            text-align: left !important;
+        }
+        .blog-date {
+            font-size: 13px !important;
+            color: #888888 !important;
+            font-weight: bold !important;
+            margin-bottom: 5px !important;
+        }
+        .blog-title {
+            font-size: 18px !important;
+            color: #333333 !important;
+            margin: 0 0 10px 0 !important;
+            font-weight: bold !important;
+        }
+        .blog-content {
+            font-size: 15px !important;
+            color: #555555 !important;
+            line-height: 1.6 !important;
+        }
+        .blog-content img {
+            max-width: 100% !important;
+            height: auto !important;
+            margin-top: 10px !important;
+            border-radius: 6px !important;
+        }
+        .blog-loading {
+            color: #888888 !important;
+            font-style: italic !important;
         }
     </style>
 </head>
@@ -268,6 +319,14 @@
     </header>
 
     <main>
+        <!-- 📢 白背景に統一したブログエリア -->
+        <section class="blog-section">
+            <h2>📢 OB・OG会からのお知らせ・日誌</h2>
+            <div id="blog-list" class="blog-container">
+                <p class="blog-loading">記事を読み込んでいます...</p>
+            </div>
+        </section>
+
         <section class="purpose-section">
             <h2>OB・OG会 設立の趣旨</h2>
             <p class="lead-text">
@@ -345,12 +404,14 @@
 
     <script>
         const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRSA1tRAmuJEZEpd1GGZVvP7Q4addCz2_b13co5dK7UtzooLsTX9SpgFDFgR_s_LNZYfbcB91fvsCD3/pub?gid=0&single=true&output=csv";
+        
+        const microCmsUrl = "https://komagome-brass-ob.microcms.io/api/v1/blog";
+        const microCmsApiKey = "qSJ070NmlfRvReLlVUJ2Lo8lvWdYF0Dle5TC";
 
         let obogList = {};
 
-        // 💡 【記憶強化】localStorageを使って絶対に状態を忘れないように修正
         function checkLoginStatus() {
-            if (window.location.hash === '#skip' || localStorage.getItem('loginStatus') === 'passed') {
+            if (localStorage.getItem('loginStatus') === 'passed') {
                 const overlay = document.getElementById('login-overlay');
                 if (overlay) {
                     overlay.style.display = 'none'; 
@@ -358,14 +419,8 @@
             }
         }
 
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', checkLoginStatus);
-        } else {
-            checkLoginStatus();
-        }
-        window.addEventListener('hashchange', checkLoginStatus);
+        checkLoginStatus();
 
-        // Googleから名簿データをダウンロード
         if (csvUrl) {
             fetch(csvUrl)
                 .then(response => response.text())
@@ -390,7 +445,50 @@
                 .catch(err => console.error("名簿の読み込みに失敗しました:", err));
         }
 
-        // 表示・非表示と斜線の連動処理
+        function loadMicroCmsBlog() {
+            fetch(microCmsUrl, {
+                headers: {
+                    "X-MICROCMS-API-KEY": microCmsApiKey
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const blogListDiv = document.getElementById('blog-list');
+                if (!blogListDiv) return;
+
+                if (!data.contents || data.contents.length === 0) {
+                    blogListDiv.innerHTML = '<p style="color:#888;">現在、投稿された記事はありません。</p>';
+                    return;
+                }
+
+                let htmlSrc = "";
+                data.contents.forEach(article => {
+                    let rawDate = article.date || article.publishedAt || "";
+                    let formattedDate = "";
+                    if (rawDate) {
+                        const d = new Date(rawDate);
+                        formattedDate = `${d.getFullYear()}年${String(d.getMonth() + 1).padStart(2, '0')}月${String(d.getDate()).padStart(2, '0')}日`;
+                    }
+
+                    htmlSrc += `
+                        <div class="blog-card">
+                            <div class="blog-date">${formattedDate}</div>
+                            <h3 class="blog-title">${article.title}</h3>
+                            <div class="blog-content">${article.content}</div>
+                        </div>
+                    `;
+                });
+                blogListDiv.innerHTML = htmlSrc;
+            })
+            .catch(err => {
+                console.error("ブログの読み込みに失敗しました:", err);
+                const blogListDiv = document.getElementById('blog-list');
+                if (blogListDiv) blogListDiv.innerHTML = '<p style="color:#ff3333;">⚠️ ブログ記事の読み込みに失敗しました。</p>';
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", loadMicroCmsBlog);
+
         function togglePasswordVisibility() {
             const passwordBox = document.getElementById('passwordBox');
             const eyeIcon = document.getElementById('eyeIcon');
@@ -406,7 +504,6 @@
             }
         }
 
-        // エンターキー判定
         document.addEventListener("DOMContentLoaded", function() {
             const boxes = [
                 document.getElementById('yearBox'), 
@@ -424,7 +521,6 @@
             });
         });
 
-        // ログイン判定
         function clickLoginButton() {
             const inputYear = document.getElementById('yearBox').value.trim();
             const inputName = document.getElementById('nameBox').value.trim();
@@ -441,7 +537,6 @@
             if (isMatch) {
                 if (errorMsg) errorMsg.style.display = 'none';
                 
-                // 💡 【記憶強化】ここもlocalStorageに保存する形に変更
                 localStorage.setItem('loginStatus', 'passed');
                 
                 if (overlay) {

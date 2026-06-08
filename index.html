@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta name="robots" content="noindex, nofollow">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>駒込学園吹奏楽部 OB・OG会</title>
@@ -131,6 +130,66 @@
             text-align: center !important;
         }
         
+        /* パスワード入力欄とモノクロアイコンの位置設定 */
+        .password-container {
+            position: relative !important;
+            width: 100% !important;
+        }
+        
+        .toggle-password-btn {
+            position: absolute !important;
+            right: 15px !important;
+            top: 38% !important;
+            transform: translateY(-50%) !important;
+            cursor: pointer !important;
+            width: 24px !important;
+            height: 24px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            user-select: none !important;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+        .toggle-password-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* 目の外枠（まぶたのライン）：水平・左右対称 */
+        .eye-icon {
+            position: relative !important;
+            width: 22px !important;   
+            height: 12px !important;  
+            border: 2px solid #333333 !important;
+            border-top-left-radius: 100% 120% !important;
+            border-top-right-radius: 100% 120% !important;
+            border-bottom-left-radius: 100% 120% !important;
+            border-bottom-right-radius: 100% 120% !important;
+        }
+        /* 黒目（真ん中の丸） */
+        .eye-icon::before {
+            content: '' !important;
+            position: absolute !important;
+            width: 6px !important;
+            height: 6px !important;
+            background-color: #333333 !important;
+            border-radius: 50% !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+        }
+        /* 斜線イラスト（表示時にかかる一本線） */
+        .eye-icon.hidden-line::after {
+            content: '' !important;
+            position: absolute !important;
+            width: 26px !important;
+            height: 2px !important;
+            background-color: #333333 !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) rotate(-45deg) !important; 
+        }
+
         /* ゴールドのログインボタン */
         .login-btn {
             display: block !important;
@@ -168,11 +227,18 @@
         <div class="login-box">
             <h2>OB・OG限定ページ</h2>
             <p style="font-size: 14px; color: #666; margin-bottom: 25px;">
-                閲覧するには卒業年と氏名を入力してください。
+                閲覧するには情報を入力してください。
             </p>
             
             <input type="text" id="yearBox" placeholder="例：2015（半角数字4桁）">
             <input type="text" id="nameBox" placeholder="お名前（フルネーム）">
+            
+            <div class="password-container">
+                <input type="password" id="passwordBox" placeholder="パスワード">
+                <div class="toggle-password-btn" onclick="togglePasswordVisibility()">
+                    <div id="eyeIcon" class="eye-icon"></div>
+                </div>
+            </div>
             
             <button class="login-btn" onclick="clickLoginButton()">ログイン</button>
             
@@ -187,7 +253,7 @@
         <div class="menu-inner">
             <nav class="menu-nav">
                 <ul>
-                    <li><a href="index.html#skip">🏠 ホーム</a></li>
+                    <li><a href="index.html">🏠 ホーム</a></li>
                     <li><a href="history.html">🎼 過去のコンクール実績</a></li>
                     <li><a href="officers.html">👥 幹部・役員紹介</a></li>
                 </ul>
@@ -282,8 +348,9 @@
 
         let obogList = {};
 
+        // 💡 【記憶強化】localStorageを使って絶対に状態を忘れないように修正
         function checkLoginStatus() {
-            if (window.location.hash === '#skip' || sessionStorage.getItem('loginStatus') === 'passed') {
+            if (window.location.hash === '#skip' || localStorage.getItem('loginStatus') === 'passed') {
                 const overlay = document.getElementById('login-overlay');
                 if (overlay) {
                     overlay.style.display = 'none'; 
@@ -298,6 +365,7 @@
         }
         window.addEventListener('hashchange', checkLoginStatus);
 
+        // Googleから名簿データをダウンロード
         if (csvUrl) {
             fetch(csvUrl)
                 .then(response => response.text())
@@ -305,14 +373,16 @@
                     const lines = text.split(/\r?\n/);
                     for (let i = 1; i < lines.length; i++) {
                         const columns = lines[i].split(",");
-                        if (columns.length >= 2) {
+                        if (columns.length >= 3) {
                             const year = columns[0].trim();
                             const name = columns[1].trim();
-                            if (year && name) {
+                            const password = columns[2].trim();
+                            
+                            if (year && name && password) {
                                 if (!obogList[year]) {
                                     obogList[year] = [];
                                 }
-                                obogList[year].push(name);
+                                obogList[year].push({ name: name, password: password });
                             }
                         }
                     }
@@ -320,17 +390,59 @@
                 .catch(err => console.error("名簿の読み込みに失敗しました:", err));
         }
 
+        // 表示・非表示と斜線の連動処理
+        function togglePasswordVisibility() {
+            const passwordBox = document.getElementById('passwordBox');
+            const eyeIcon = document.getElementById('eyeIcon');
+            
+            if (passwordBox && eyeIcon) {
+                if (passwordBox.type === 'password') {
+                    passwordBox.type = 'text';
+                    eyeIcon.classList.add('hidden-line');
+                } else {
+                    passwordBox.type = 'password';
+                    eyeIcon.classList.remove('hidden-line');
+                }
+            }
+        }
+
+        // エンターキー判定
+        document.addEventListener("DOMContentLoaded", function() {
+            const boxes = [
+                document.getElementById('yearBox'), 
+                document.getElementById('nameBox'),
+                document.getElementById('passwordBox')
+            ];
+            boxes.forEach(box => {
+                if (box) {
+                    box.addEventListener('keydown', function(event) {
+                        if (event.key === 'Enter') {
+                            clickLoginButton(); 
+                        }
+                    });
+                }
+            });
+        });
+
+        // ログイン判定
         function clickLoginButton() {
             const inputYear = document.getElementById('yearBox').value.trim();
             const inputName = document.getElementById('nameBox').value.trim();
+            const inputPassword = document.getElementById('passwordBox').value.trim();
             const errorMsg = document.getElementById('error-message');
             const overlay = document.getElementById('login-overlay');
 
-            if (obogList[inputYear] && obogList[inputYear].includes(inputName)) {
+            let isMatch = false;
+
+            if (obogList[inputYear]) {
+                isMatch = obogList[inputYear].some(user => user.name === inputName && user.password === inputPassword);
+            }
+
+            if (isMatch) {
                 if (errorMsg) errorMsg.style.display = 'none';
                 
-                sessionStorage.setItem('loginStatus', 'passed');
-                window.location.hash = 'skip';
+                // 💡 【記憶強化】ここもlocalStorageに保存する形に変更
+                localStorage.setItem('loginStatus', 'passed');
                 
                 if (overlay) {
                     overlay.style.opacity = "0";

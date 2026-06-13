@@ -18,7 +18,7 @@
             top: 50% !important;
             right: 20px !important;
             transform: translateY(-50%) !important;
-            z-index: 99999 !important; 
+            z-index: 9999 !important; 
         }
 
         .menu-btn {
@@ -33,7 +33,7 @@
             background-color: #d4af37 !important;
             border-radius: 50% !important;
             cursor: pointer !important;
-            z-index: 99999 !important; 
+            z-index: 9999 !important; 
             box-shadow: 0 4px 10px rgba(0,0,0,0.3) !important;
         }
 
@@ -76,7 +76,7 @@
             background-color: #fcfbf9 !important;
             box-shadow: -5px 0 15px rgba(0,0,0,0.2) !important;
             transition: right 0.3s ease !important; 
-            z-index: 99998 !important; 
+            z-index: 9998 !important; 
             overflow-y: auto !important;
         }
 
@@ -87,10 +87,82 @@
         .menu-inner {
             padding: 100px 20px 40px 20px !important;
         }
+
+        /* ==========================================
+           👥 役員紹介カードを横並びにするCSS
+           ========================================== */
+        .officer-section {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .officer-lead {
+            text-align: center;
+            margin: 40px 0 20px 0;
+            color: #333;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        /* 横並びにするための箱 */
+        .officer-grid {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+        /* カード1枚ずつのデザイン */
+        .officer-card {
+            flex: 1;
+            max-width: 380px;
+            background-color: #ffffff;
+            border-top: 5px solid #6b1426; /* えんじ色のアクセント */
+            padding: 25px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        .officer-role {
+            display: inline-block;
+            background-color: #6b1426;
+            color: #fff;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .officer-name {
+            font-size: 20px;
+            margin: 10px 0 5px 0;
+            color: #111;
+        }
+        .officer-info {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .officer-message {
+            font-size: 14px;
+            color: #444;
+            line-height: 1.5;
+            border-top: 1px dotted #ccc;
+            padding-top: 15px;
+        }
+
+        /* 📱 スマホ対応（画面が狭いときは縦並びに戻す） */
+        @media screen and (max-width: 600px) {
+            .officer-grid {
+                flex-direction: column;
+                align-items: center;
+            }
+            .officer-card {
+                width: 100%;
+            }
+        }
     </style>
-    <!-- 🔐 ページが一瞬でも表示されるのを防ぐため、読み込み直後に最速でチェックを実行 -->
+    
     <script>
-        if (localStorage.getItem('loginStatus') !== 'passed') {
+        if (sessionStorage.getItem('loginStatus') !== 'passed') {
             window.location.replace("index.html");
         }
     </script>
@@ -119,26 +191,43 @@
 
     <main>
         <section class="officer-section">
+            
             <p class="officer-lead">本会を運営している幹部メンバーです。よろしくお願いいたします！</p>
-
             <div class="officer-grid">
                 <div class="officer-card">
                     <div class="officer-role">会長</div>
-                    <h3 class="officer-name">駒込 太郎</h3>
-                    <p class="officer-info">第50期生 ／ トランペット</p>
-                    <p class="officer-message">「OB・OGの皆様と現役生を繋ぐ架け橋となるよう、精一杯努めてまいります。」</p>
+                    <h3 class="officer-name">石田 諒</h3>
+                    <p class="officer-info">2026年卒 ／ トロンボーン</p>
+                    <p class="officer-message">「私の駒込愛とともに、KWOの縦のつながりを広げていきたいと考えています！」</p>
                 </div>
 
                 <div class="officer-card">
                     <div class="officer-role">副会長</div>
-                    <h3 class="officer-name">白山 花子</h3>
-                    <p class="officer-info">第52期生 ／ フルート</p>
+                    <h3 class="officer-name">駒込 太郎</h3>
+                    <p class="officer-info">2020年卒 ／ クラリネット</p>
                     <p class="officer-message">「定期演奏会のOB合同ステージなど、皆様が楽しめる企画をたくさん作っていきたいです！」</p>
                 </div>
             </div>
 
-            <p style="text-align: center; margin-top: 40px;">
-                <a href="index.html" style="color: #6b1426; font-weight: bold;">← トップページに戻る</a>
+            <p class="officer-lead">今年度のKWOを運営している幹部メンバーを紹介します。</p>
+            <div class="officer-grid">
+                <div class="officer-card">
+                    <div class="officer-role">部長</div>
+                    <h3 class="officer-name">塩谷穂夏</h3>
+                    <p class="officer-info">コントラバス</p>
+                    <p class="officer-message">「OB・OGの方にも協力をいただいて部活を運営していきたいと考えていますので、よろしくお願いいたします！」</p>
+                </div>
+
+                <div class="officer-card">
+                    <div class="officer-role">副部長</div>
+                    <h3 class="officer-name">南谷未來</h3>
+                    <p class="officer-info">トランペット</p>
+                    <p class="officer-message">「野球応援や現役部員への指導など、よろしくお願いします！」</p>
+                </div>
+            </div>
+
+            <p style="text-align: center; margin-top: 50px;">
+                <a href="index.html" style="color: #6b1426; font-weight: bold; text-decoration: none;">← トップページに戻る</a>
             </p>
         </section>
     </main>

@@ -6,6 +6,17 @@
     <title>駒込学園吹奏楽部 OB・OG会</title>
     <link rel="stylesheet" href="style.css">
 
+    <script>
+        (function() {
+            // セキュリティ：ブラウザを閉じるとログアウトされる設定
+            if (sessionStorage.getItem('loginStatus') === 'passed') {
+                const style = document.createElement('style');
+                style.innerHTML = '#login-overlay { display: none !important; opacity: 0 !important; pointer-events: none !important; }';
+                document.head.appendChild(style);
+            }
+        })();
+    </script>
+
     <style>
         /* 隠しチェックボックスは非表示 */
         #menu-btn-check {
@@ -18,7 +29,7 @@
             top: 50% !important;
             right: 20px !important;
             transform: translateY(-50%) !important;
-            z-index: 99999 !important; 
+            z-index: 9999 !important; 
         }
 
         .menu-btn {
@@ -33,7 +44,7 @@
             background-color: #d4af37 !important;
             border-radius: 50% !important;
             cursor: pointer !important;
-            z-index: 99999 !important; 
+            z-index: 9999 !important; 
             box-shadow: 0 4px 10px rgba(0,0,0,0.3) !important;
         }
 
@@ -53,20 +64,10 @@
         .menu-btn span::before { bottom: 7px !important; }
         .menu-btn span::after { top: 7px !important; }
 
-        /* ボタンを押した時に「×」に変形 */
-        #menu-btn-check:checked ~ .menu-btn span {
-            background-color: transparent !important;
-        }
-        #menu-btn-check:checked ~ .menu-btn span::before {
-            bottom: 0 !important;
-            transform: rotate(45deg) !important;
-        }
-        #menu-btn-check:checked ~ .menu-btn span::after {
-            top: 0 !important;
-            transform: rotate(-45deg) !important;
-        }
+        #menu-btn-check:checked ~ .menu-btn span { background-color: transparent !important; }
+        #menu-btn-check:checked ~ .menu-btn span::before { bottom: 0 !important; transform: rotate(45deg) !important; }
+        #menu-btn-check:checked ~ .menu-btn span::after { top: 0 !important; transform: rotate(-45deg) !important; }
 
-        /* 引き出しメニュー */
         .menu-content {
             position: fixed !important;
             top: 0 !important;
@@ -76,19 +77,14 @@
             background-color: #fcfbf9 !important;
             box-shadow: -5px 0 15px rgba(0,0,0,0.2) !important;
             transition: right 0.3s ease !important; 
-            z-index: 99998 !important; 
+            z-index: 9998 !important; 
             overflow-y: auto !important;
         }
 
-        #menu-btn-check:checked ~ .menu-content {
-            right: 0 !important;
-        }
+        #menu-btn-check:checked ~ .menu-content { right: 0 !important; }
+        .menu-inner { padding: 100px 20px 40px 20px !important; }
 
-        .menu-inner {
-            padding: 100px 20px 40px 20px !important;
-        }
-
-        /* 🔐 ログイン画面を完全に最前面に固定 */
+        /* 🔐 ログイン壁 */
         #login-overlay {
             position: fixed !important;
             top: 0 !important;
@@ -100,7 +96,7 @@
             display: flex !important;
             justify-content: center !important;
             align-items: center !important;
-            z-index: 1000000 !important; 
+            z-index: 100000 !important; 
             text-align: center;
             opacity: 1;
             transition: opacity 0.4s ease; 
@@ -114,11 +110,7 @@
             max-width: 360px !important;
             width: 90% !important;
         }
-        .login-box h2 {
-            color: #6b1426 !important;
-            margin-bottom: 20px !important;
-            font-size: 20px !important;
-        }
+        .login-box h2 { color: #6b1426 !important; margin-bottom: 20px !important; font-size: 20px !important; }
         .login-box input {
             width: 100% !important;
             padding: 12px !important;
@@ -129,13 +121,7 @@
             font-size: 16px !important;
             text-align: center !important;
         }
-        
-        /* パスワード入力欄とモノクロアイコンの位置設定 */
-        .password-container {
-            position: relative !important;
-            width: 100% !important;
-        }
-        
+        .password-container { position: relative !important; width: 100% !important; }
         .toggle-password-btn {
             position: absolute !important;
             right: 15px !important;
@@ -151,11 +137,6 @@
             opacity: 0.5;
             transition: opacity 0.2s;
         }
-        .toggle-password-btn:hover {
-            opacity: 0.9;
-        }
-
-        /* 目の外枠：水平・左右対称 */
         .eye-icon {
             position: relative !important;
             width: 22px !important;   
@@ -166,7 +147,6 @@
             border-bottom-left-radius: 100% 120% !important;
             border-bottom-right-radius: 100% 120% !important;
         }
-        /* 黒目 */
         .eye-icon::before {
             content: '' !important;
             position: absolute !important;
@@ -178,7 +158,6 @@
             left: 50% !important;
             transform: translate(-50%, -50%) !important;
         }
-        /* 斜線イラスト */
         .eye-icon.hidden-line::after {
             content: '' !important;
             position: absolute !important;
@@ -189,8 +168,6 @@
             left: 50% !important;
             transform: translate(-50%, -50%) rotate(-45deg) !important; 
         }
-
-        /* ゴールドのログインボタン */
         .login-btn {
             display: block !important;
             background-color: #d4af37 !important; 
@@ -209,67 +186,46 @@
             padding: 0 !important;
             text-decoration: none !important;
         }
-        .login-btn:hover {
-            background-color: #bfa030 !important;
-        }
-        .error-msg {
-            color: #ff3333 !important;
-            font-size: 14px !important;
-            margin-top: 10px !important;
-            font-weight: bold !important;
-            display: none; 
-        }
 
-        /* 🎨 【修正】ブログエリアのデザインを他と統一（白背景） */
+        /* 📝 ブログセクションの余白調整 */
         .blog-section {
-            background-color: #ffffff !important; /* 他のセクションと同じ純粋な白に変更 */
-            padding: 40px 20px !important;
+            background-color: #ffffff !important;
+            padding: 20px 20px 40px 20px !important;
             margin: 30px auto !important;
             max-width: 800px !important;
             border-radius: 12px !important;
-            /* 影（シャドウ）を他のセクションの雰囲気と統一 */
             box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important;
         }
-        .blog-container {
-            margin-top: 25px !important;
-        }
-        /* 各ブログ記事のカードデザイン */
         .blog-card {
             background-color: #ffffff !important;
-            border-left: 5px solid #6b1426 !important; /* 吹奏楽部のえんじ色 */
+            border-left: 5px solid #6b1426 !important;
             padding: 20px !important;
             margin-bottom: 20px !important;
             border-radius: 0 8px 8px 0 !important;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
             text-align: left !important;
         }
-        .blog-date {
-            font-size: 13px !important;
-            color: #888888 !important;
-            font-weight: bold !important;
-            margin-bottom: 5px !important;
+
+        /* 📸 スライドショーのデザイン */
+        .slider-wrapper {
+            position: relative !important;
+            width: 100% !important;
+            max-width: 800px !important;
+            margin: 20px auto !important;
+            overflow: hidden !important;
+            border-radius: 12px !important;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2) !important;
         }
-        .blog-title {
-            font-size: 18px !important;
-            color: #333333 !important;
-            margin: 0 0 10px 0 !important;
-            font-weight: bold !important;
-        }
-        .blog-content {
-            font-size: 15px !important;
-            color: #555555 !important;
-            line-height: 1.6 !important;
-        }
-        .blog-content img {
-            max-width: 100% !important;
-            height: auto !important;
-            margin-top: 10px !important;
-            border-radius: 6px !important;
-        }
-        .blog-loading {
-            color: #888888 !important;
-            font-style: italic !important;
-        }
+        .slider-inner { display: flex !important; transition: transform 0.5s ease-in-out !important; width: 100% !important; }
+        .slider-item { min-width: 100% !important; position: relative !important; }
+        .slider-item img { width: 100% !important; height: 450px !important; object-fit: cover !important; display: block !important; }
+        .slider-caption { position: absolute !important; bottom: 0 !important; left: 0 !important; width: 100% !important; background: rgba(0, 0, 0, 0.6) !important; color: #ffffff !important; padding: 10px !important; font-size: 14px !important; text-align: center !important; }
+        .slider-btn { position: absolute !important; top: 50% !important; transform: translateY(-50%) !important; background: rgba(212, 175, 55, 0.9) !important; color: #ffffff !important; border: none !important; width: 44px !important; height: 44px !important; border-radius: 50% !important; cursor: pointer !important; font-size: 22px !important; display: flex !important; align-items: center !important; justify-content: center !important; z-index: 50 !important; transition: background 0.3s !important; }
+        .slider-btn:hover { background: #6b1426 !important; }
+        .slider-prev { left: 15px !important; }
+        .slider-next { right: 15px !important; }
+
+        @media screen and (max-width: 600px) { .slider-item img { height: 250px !important; } }
     </style>
 </head>
 <body>
@@ -277,23 +233,17 @@
     <div id="login-overlay">
         <div class="login-box">
             <h2>OB・OG限定ページ</h2>
-            <p style="font-size: 14px; color: #666; margin-bottom: 25px;">
-                閲覧するには情報を入力してください。
-            </p>
-            
-            <input type="text" id="yearBox" placeholder="例：2015（半角数字4桁）">
-            <input type="text" id="nameBox" placeholder="お名前（フルネーム）">
-            
+            <p style="font-size: 14px; color: #666; margin-bottom: 25px;">情報を入力してください。</p>
+            <input type="text" id="yearBox" placeholder="例：2015" onkeydown="handleEnter(event)">
+            <input type="text" id="nameBox" placeholder="お名前" onkeydown="handleEnter(event)">
             <div class="password-container">
-                <input type="password" id="passwordBox" placeholder="パスワード">
+                <input type="password" id="passwordBox" placeholder="パスワード" onkeydown="handleEnter(event)">
                 <div class="toggle-password-btn" onclick="togglePasswordVisibility()">
                     <div id="eyeIcon" class="eye-icon"></div>
                 </div>
             </div>
-            
             <button class="login-btn" onclick="clickLoginButton()">ログイン</button>
-            
-            <div id="error-message" class="error-msg">⚠️ 入力内容が正しくありません</div>
+            <div id="error-message" style="color:red; display:none; margin-top:10px;">入力内容が正しくありません</div>
         </div>
     </div>
 
@@ -305,7 +255,7 @@
             <nav class="menu-nav">
                 <ul>
                     <li><a href="index.html">🏠 ホーム</a></li>
-                    <li><a href="history.html">🎼 過去のコンクール実績</a></li>
+                    <li><a href="history.html">🎼 過去の実績</a></li>
                     <li><a href="officers.html">👥 幹部・役員紹介</a></li>
                 </ul>
             </nav>
@@ -319,12 +269,46 @@
     </header>
 
     <main>
-        <!-- 📢 白背景に統一したブログエリア -->
         <section class="blog-section">
-            <h2>📢 OB・OG会からのお知らせ・日誌</h2>
-            <div id="blog-list" class="blog-container">
-                <p class="blog-loading">記事を読み込んでいます...</p>
-            </div>
+            <h2>📢 お知らせ・日誌</h2>
+            <details class="purpose-details">
+                <summary class="purpose-summary">記事一覧を見る</summary>
+                <div id="blog-list" style="margin-top: 20px;">
+                    <p>記事を読み込んでいます...</p>
+                </div>
+            </details>
+        </section>
+
+        <section class="gallery-section">
+            <h2>活動の様子（フォトギャラリー）</h2>
+            <p>定期演奏会やコンクールの思い出をスライドショーでお届けします。</p>
+            <details class="purpose-details">
+                <summary class="purpose-summary">写真をもっと見る</summary>
+                <div class="purpose-content">
+                    <div class="slider-wrapper">
+                        <div class="slider-inner" id="sliderInner">
+                            <div class="slider-item">
+                                <img src="images/photo1.jpg" alt="定期演奏会">
+                                <div class="slider-caption">定期演奏会</div>
+                            </div>
+                            <div class="slider-item">
+                                <img src="images/photo2.jpg" alt="吹奏楽コンクール">
+                                <div class="slider-caption">吹奏楽コンクール</div>
+                            </div>
+                            <div class="slider-item">
+                                <img src="images/photo3.jpg" alt="夏合宿">
+                                <div class="slider-caption">夏合宿での一コマ</div>
+                            </div>
+                            <div class="slider-item">
+                                <img src="images/photo4.jpg" alt="日常練習">
+                                <div class="slider-caption">日々の合奏練習</div>
+                            </div>
+                        </div>
+                        <button type="button" class="slider-btn slider-prev" onclick="moveSlider(-1); event.stopPropagation();">❮</button>
+                        <button type="button" class="slider-btn slider-next" onclick="moveSlider(1); event.stopPropagation();">❯</button>
+                    </div>
+                </div>
+            </details>
         </section>
 
         <section class="purpose-section">
@@ -333,7 +317,6 @@
                 駒込学園吹奏楽部は、これまで多くの卒業生を送り出してきました。<br>
                 この度、卒業生同士のつながりを深め、安全に現役部員の活動を末永く応援していくために、公式OB・OG会を発足いたしました。
             </p>
-
             <details class="purpose-details">
                 <summary class="purpose-summary">もっと見る</summary>
                 <div class="purpose-content">
@@ -346,39 +329,6 @@
                             <h3>🤝 2. 卒業生同士の交流</h3>
                             <p>世代を超えたOB・OGのネットワークを広げ、いつまでも音楽でつながれる場所を作ります。</p>
                         </div>
-                        <div class="purpose-card">
-                            <h3>🎼 3. 伝統の継承</h3>
-                            <p>駒込学園吹奏楽部が築いてきた歴史や伝統を次の世代へ引き継ぎ、部活動の発展に寄与します。</p>
-                        </div>
-                    </div>
-                </div>
-            </details>
-        </section>
-
-        <section class="gallery-section">
-            <h2>活動の様子（フォトギャラリー）</h2>
-            <p class="gallery-lead">定期演奏会やコンクール、日々の練習風景をお届けします。</p>
-
-            <details class="purpose-details">
-                <summary class="purpose-summary">写真をもっと見る</summary>
-                <div class="purpose-content">
-                    <div class="gallery-grid">
-                        <div class="gallery-item">
-                            <img src="images/photo1.jpg" alt="定期演奏会">
-                            <div class="gallery-caption">定期演奏会</div>
-                        </div>
-                        <div class="gallery-item">
-                            <img src="images/photo2.jpg" alt="コンクール">
-                            <div class="gallery-caption">吹奏楽コンクール</div>
-                        </div>
-                        <div class="gallery-item">
-                            <img src="images/photo3.jpg" alt="夏合宿">
-                            <div class="gallery-caption">夏合宿</div>
-                        </div>
-                        <div class="gallery-item">
-                            <img src="images/photo4.jpg" alt="日常練習">
-                            <div class="gallery-caption">日常練習</div>
-                        </div>
                     </div>
                 </div>
             </details>
@@ -386,14 +336,9 @@
 
         <section class="sns-link-section">
             <h2>公式SNSで最新情報をチェック！</h2>
-            <p>現役部員の日常や演奏会のお知らせは、こちらの公式アカウントで発信しています。</p>
             <div class="sns-button-container">
-                <a href="https://www.instagram.com/kg_brass/" target="_blank" class="sns-btn instagram-btn">
-                    📸 公式Instagramを見る
-                </a>
-                <a href="https://x.com/kg_brass" target="_blank" class="sns-btn x-btn">
-                    𝕏 公式X（旧Twitter）を見る
-                </a>
+                <a href="https://www.instagram.com/kg_brass/" target="_blank" class="sns-btn instagram-btn">📸 公式Instagram</a>
+                <a href="https://x.com/kg_brass" target="_blank" class="sns-btn x-btn">𝕏 公式X</a>
             </div>
         </section>
     </main>
@@ -403,153 +348,97 @@
     </footer>
 
     <script>
+        // --------------------------------------------------
+        // 📸 スライドショーのプログラム
+        // --------------------------------------------------
+        let currentSlide = 0;
+        function moveSlider(direction) {
+            const inner = document.getElementById('sliderInner');
+            const slides = document.querySelectorAll('.slider-item');
+            const totalSlides = slides.length;
+            if (!inner || totalSlides === 0) return;
+            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+            inner.style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+
+        // --------------------------------------------------
+        // 🎫 microCMS・スプレッドシート設定
+        // --------------------------------------------------
         const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRSA1tRAmuJEZEpd1GGZVvP7Q4addCz2_b13co5dK7UtzooLsTX9SpgFDFgR_s_LNZYfbcB91fvsCD3/pub?gid=0&single=true&output=csv";
-        
         const microCmsUrl = "https://komagome-brass-ob.microcms.io/api/v1/blog";
         const microCmsApiKey = "qSJ070NmlfRvReLlVUJ2Lo8lvWdYF0Dle5TC";
 
         let obogList = {};
 
         function checkLoginStatus() {
-            if (localStorage.getItem('loginStatus') === 'passed') {
-                const overlay = document.getElementById('login-overlay');
-                if (overlay) {
-                    overlay.style.display = 'none'; 
-                }
+            const overlay = document.getElementById('login-overlay');
+            if (sessionStorage.getItem('loginStatus') === 'passed') {
+                if (overlay) overlay.style.display = 'none'; 
             }
         }
-
         checkLoginStatus();
 
         if (csvUrl) {
-            fetch(csvUrl)
-                .then(response => response.text())
-                .then(text => {
-                    const lines = text.split(/\r?\n/);
-                    for (let i = 1; i < lines.length; i++) {
-                        const columns = lines[i].split(",");
-                        if (columns.length >= 3) {
-                            const year = columns[0].trim();
-                            const name = columns[1].trim();
-                            const password = columns[2].trim();
-                            
-                            if (year && name && password) {
-                                if (!obogList[year]) {
-                                    obogList[year] = [];
-                                }
-                                obogList[year].push({ name: name, password: password });
-                            }
+            fetch(csvUrl).then(r => r.text()).then(text => {
+                const lines = text.split(/\r?\n/);
+                for (let i = 1; i < lines.length; i++) {
+                    const col = lines[i].split(",");
+                    if (col.length >= 3) {
+                        const year = col[0].trim(), name = col[1].trim(), pw = col[2].trim();
+                        if (year && name && pw) {
+                            if (!obogList[year]) obogList[year] = [];
+                            obogList[year].push({ name: name, password: pw });
                         }
                     }
-                })
-                .catch(err => console.error("名簿の読み込みに失敗しました:", err));
-        }
-
-        function loadMicroCmsBlog() {
-            fetch(microCmsUrl, {
-                headers: {
-                    "X-MICROCMS-API-KEY": microCmsApiKey
                 }
-            })
-            .then(response => response.json())
-            .then(data => {
-                const blogListDiv = document.getElementById('blog-list');
-                if (!blogListDiv) return;
-
-                if (!data.contents || data.contents.length === 0) {
-                    blogListDiv.innerHTML = '<p style="color:#888;">現在、投稿された記事はありません。</p>';
-                    return;
-                }
-
-                let htmlSrc = "";
-                data.contents.forEach(article => {
-                    let rawDate = article.date || article.publishedAt || "";
-                    let formattedDate = "";
-                    if (rawDate) {
-                        const d = new Date(rawDate);
-                        formattedDate = `${d.getFullYear()}年${String(d.getMonth() + 1).padStart(2, '0')}月${String(d.getDate()).padStart(2, '0')}日`;
-                    }
-
-                    htmlSrc += `
-                        <div class="blog-card">
-                            <div class="blog-date">${formattedDate}</div>
-                            <h3 class="blog-title">${article.title}</h3>
-                            <div class="blog-content">${article.content}</div>
-                        </div>
-                    `;
-                });
-                blogListDiv.innerHTML = htmlSrc;
-            })
-            .catch(err => {
-                console.error("ブログの読み込みに失敗しました:", err);
-                const blogListDiv = document.getElementById('blog-list');
-                if (blogListDiv) blogListDiv.innerHTML = '<p style="color:#ff3333;">⚠️ ブログ記事の読み込みに失敗しました。</p>';
             });
         }
 
-        document.addEventListener("DOMContentLoaded", loadMicroCmsBlog);
+        function loadBlog() {
+            fetch(microCmsUrl, { headers: { "X-MICROCMS-API-KEY": microCmsApiKey } })
+            .then(r => r.json()).then(data => {
+                const list = document.getElementById('blog-list');
+                if (!list) return;
+                if (!data.contents || data.contents.length === 0) {
+                    list.innerHTML = '<p>記事はありません。</p>'; return;
+                }
+                let html = "";
+                data.contents.forEach(art => {
+                    const d = new Date(art.date || art.publishedAt);
+                    const fd = `${d.getFullYear()}年${String(d.getMonth() + 1).padStart(2, '0')}月${String(d.getDate()).padStart(2, '0')}日`;
+                    html += `<div class="blog-card"><div class="blog-date">${fd}</div><h3 class="blog-title">${art.title}</h3><div class="blog-content">${art.content}</div></div>`;
+                });
+                list.innerHTML = html;
+            });
+        }
+        document.addEventListener("DOMContentLoaded", loadBlog);
 
         function togglePasswordVisibility() {
-            const passwordBox = document.getElementById('passwordBox');
-            const eyeIcon = document.getElementById('eyeIcon');
-            
-            if (passwordBox && eyeIcon) {
-                if (passwordBox.type === 'password') {
-                    passwordBox.type = 'text';
-                    eyeIcon.classList.add('hidden-line');
-                } else {
-                    passwordBox.type = 'password';
-                    eyeIcon.classList.remove('hidden-line');
-                }
-            }
+            const box = document.getElementById('passwordBox');
+            const icon = document.getElementById('eyeIcon');
+            if (box.type === 'password') { box.type = 'text'; icon.classList.add('hidden-line'); }
+            else { box.type = 'password'; icon.classList.remove('hidden-line'); }
         }
 
-        document.addEventListener("DOMContentLoaded", function() {
-            const boxes = [
-                document.getElementById('yearBox'), 
-                document.getElementById('nameBox'),
-                document.getElementById('passwordBox')
-            ];
-            boxes.forEach(box => {
-                if (box) {
-                    box.addEventListener('keydown', function(event) {
-                        if (event.key === 'Enter') {
-                            clickLoginButton(); 
-                        }
-                    });
-                }
-            });
-        });
-
         function clickLoginButton() {
-            const inputYear = document.getElementById('yearBox').value.trim();
-            const inputName = document.getElementById('nameBox').value.trim();
-            const inputPassword = document.getElementById('passwordBox').value.trim();
-            const errorMsg = document.getElementById('error-message');
+            const y = document.getElementById('yearBox').value.trim();
+            const n = document.getElementById('nameBox').value.trim();
+            const p = document.getElementById('passwordBox').value.trim();
+            const err = document.getElementById('error-message');
             const overlay = document.getElementById('login-overlay');
-
             let isMatch = false;
-
-            if (obogList[inputYear]) {
-                isMatch = obogList[inputYear].some(user => user.name === inputName && user.password === inputPassword);
-            }
-
+            if (obogList[y]) isMatch = obogList[y].some(u => u.name === n && u.password === p);
             if (isMatch) {
-                if (errorMsg) errorMsg.style.display = 'none';
-                
-                localStorage.setItem('loginStatus', 'passed');
-                
+                sessionStorage.setItem('loginStatus', 'passed');
                 if (overlay) {
                     overlay.style.opacity = "0";
                     overlay.style.pointerEvents = "none";
-                    setTimeout(function() {
-                        overlay.style.display = 'none';
-                    }, 400);
+                    setTimeout(() => { overlay.style.display = 'none'; }, 400);
                 }
-            } else {
-                if (errorMsg) errorMsg.style.display = 'block';
-            }
+            } else { if (err) err.style.display = 'block'; }
         }
+
+        function handleEnter(event) { if (event.key === 'Enter') clickLoginButton(); }
     </script>
 
 </body>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>保護者専用限定ページ - 駒込学園吹奏楽部</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        (function() {
+            if (sessionStorage.getItem('parentStatus') === 'passed') {
+                const style = document.createElement('style');
+                style.innerHTML = '#login-overlay { display: none !important; opacity: 0 !important; pointer-events: none !important; }';
+                document.head.appendChild(style);
+            }
+        })();
+    </script>
+    <style>
+        #login-overlay { position: fixed !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; background-color: var(--primary-burgundy) !important; color: #ffffff !important; display: flex !important; justify-content: center !important; align-items: center !important; z-index: 100000 !important; opacity: 1; transition: opacity 0.5s var(--easing-smooth); }
+        .login-box { background-color: #ffffff !important; color: #332d2e !important; padding: 45px 36px !important; border-radius: 16px !important; box-shadow: 0 20px 50px rgba(0,0,0,0.3) !important; max-width: 360px !important; width: 90% !important; text-align: center; }
+        .login-box h2 { color: var(--primary-burgundy) !important; margin-bottom: 8px !important; font-size: 22px !important; font-weight: 600; }
+        .login-box input { width: 100% !important; padding: 14px !important; margin-bottom: 16px !important; border: 1px solid #e0deda !important; border-radius: 8px !important; box-sizing: border-box !important; font-size: 16px !important; text-align: center !important; background-color: #faf9f6; transition: all 0.3s; }
+        .login-box input:focus { border-color: var(--accent-gold) !important; background-color: #fff; outline: none; }
+        .password-container { position: relative !important; width: 100% !important; }
+        .toggle-password-btn { position: absolute !important; right: 16px !important; top: 40% !important; transform: translateY(-50%) !important; cursor: pointer !important; opacity: 0.4; }
+        .eye-icon { position: relative !important; width: 20px !important; height: 11px !important; border: 2px solid #333333 !important; border-radius: 50% !important; }
+        .eye-icon::before { content: '' !important; position: absolute !important; width: 5px !important; height: 5px !important; background-color: #333333 !important; border-radius: 50% !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important; }
+        .eye-icon.hidden-line::after { content: '' !important; position: absolute !important; width: 24px !important; height: 2px !important; background-color: #333333 !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) rotate(-45deg) !important; }
+        .login-btn { display: block !important; background-color: var(--accent-gold) !important; color: #ffffff !important; border: none !important; height: 48px !important; line-height: 48px !important; width: 100% !important; font-weight: bold !important; border-radius: 8px !important; cursor: pointer !important; font-size: 15px !important; transition: background-color 0.2s !important; letter-spacing: 0.05em; }
+        .login-btn:hover { background-color: var(--accent-gold-hover) !important; }
+        
+        .post-card { background-color: #ffffff !important; border: 1px solid #f0ede9 !important; padding: 22px 24px !important; margin-bottom: 14px !important; border-radius: 10px !important; box-shadow: 0 4px 15px rgba(0,0,0,0.01) !important; text-align: left; }
+        .post-date { font-size: 12px; color: var(--accent-gold); font-weight: 600; margin-bottom: 6px; }
+        .post-title { font-size: 15.5px; font-weight: 600; margin: 0 0 10px 0; color: var(--primary-burgundy); line-height: 1.4; }
+        .post-content { font-size: 13.5px; color: #554e4f; line-height: 1.7; }
+        
+        .news-card { border-left: 4px solid var(--accent-gold) !important; background-color: #fffdfa !important; }
+
+        .slider-wrapper { position: relative !important; width: 100% !important; max-width: 800px !important; margin: 20px auto !important; overflow: hidden !important; border-radius: 12px !important; box-shadow: 0 12px 35px rgba(0,0,0,0.1) !important; }
+        .slider-inner { display: flex !important; transition: transform 0.6s var(--easing-smooth) !important; width: 100% !important; }
+        .slider-item { min-width: 100% !important; position: relative !important; }
+        .slider-item img { width: 100% !important; height: 460px !important; object-fit: cover !important; display: block !important; }
+        .slider-caption { position: absolute !important; bottom: 0 !important; left: 0 !important; width: 100% !important; background: linear-gradient(transparent, rgba(0, 0, 0, 0.75)) !important; color: #ffffff !important; padding: 20px 15px 15px 15px !important; font-size: 14px !important; text-align: center !important; box-sizing: border-box; }
+        .slider-btn { position: absolute !important; top: 50% !important; transform: translateY(-50%) !important; background: rgba(255,255,255,0.9) !important; color: var(--primary-burgundy) !important; border: 1px solid rgba(0,0,0,0.05) !important; width: 44px !important; height: 44px !important; border-radius: 50% !important; cursor: pointer !important; font-size: 16px !important; display: flex !important; align-items: center !important; justify-content: center !important; z-index: 50 !important; transition: all 0.2s !important; box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important; }
+        .slider-btn:hover { background: var(--primary-burgundy) !important; color: #fff !important; }
+        .slider-prev { left: 20px !important; }
+        .slider-next { right: 20px !important; }
+        
+        .calendar-container { width: 100%; background-color: #ffffff; border-radius: 12px; border: 1px solid #f0ede9; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02); overflow: hidden; }
+        .calendar-container .cal-pc { display: block; }
+        .calendar-container .cal-sp { display: none; }
+        @media screen and (max-width: 750px) { .slider-item img { height: 280px !important; } .calendar-container .cal-pc { display: none; } .calendar-container .cal-sp { display: block; } }
+    </style>
+</head>
+<body>
+
+    <div id="login-overlay">
+        <div class="login-box">
+            <h2>保護者専用ページ</h2>
+            <p style="font-size: 13px; color: #736d6e; margin-bottom: 24px;">保護者専用パスワードを入力してください</p>
+            <div class="password-container">
+                <input type="password" id="passwordBox" placeholder="パスワードを入力" onkeydown="handleEnter(event)">
+                <div class="toggle-password-btn" onclick="togglePasswordVisibility()">
+                    <div id="eyeIcon" class="eye-icon"></div>
+                </div>
+            </div>
+            <button class="login-btn" onclick="clickLoginButton()">認証する</button>
+            <div id="error-message" style="color:#d9383a; display:none; margin-top:12px; font-size:13.5px; font-weight:600;">パスワードが正しくありません</div>
+        </div>
+    </div>
+
+    <input type="checkbox" id="menu-btn-check">
+    <label for="menu-btn-check" class="menu-btn"><span></span></label>
+    
+    <div class="menu-content">
+        <div class="menu-inner">
+            <nav class="menu-nav">
+                <ul>
+                    <li><a href="index.html">ホーム（一般公開）</a></li>
+                    <li><a href="obog.html">OB･OG専用限定ページ</a></li>
+                    <li><a href="parents.html">保護者専用限定ページ</a></li>
+                    <li><a href="history.html">過去のコンクール実績</a></li>
+                    <li><a href="officers.html">幹部･役員紹介</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <header class="site-header">
+        <div class="header-bg-slider active-bg" style="background-image: url('images/header.jpg');"></div>
+        <div class="header-title-container">
+            <h1>保護者専用限定ページ</h1>
+        </div>
+    </header>
+
+    <main>
+        <section>
+            <h2>公演･活動スケジュール</h2>
+            <p style="color: #666; font-size: 14px; margin-bottom: 18px;">今後の本番公演や活動スケジュールです。</p>
+            <div class="calendar-container">
+                <iframe class="cal-pc" src="https://calendar.google.com/calendar/embed?src=8797fb8a8a6876cc331dbee75517b14de8a439e617967c18c8e818824a6f2f7b%40group.calendar.google.com&amp;ctz=Asia%2FTokyo&amp;mode=MONTH&amp;showTitle=0&amp;showNav=1&amp;showDate=1&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;wkst=1&amp;bgcolor=%23ffffff&amp;color=%23520e1b" style="border: 0" width="100%" height="600" frameborder="0" scrolling="no"></iframe>
+                <iframe class="cal-sp" src="https://calendar.google.com/calendar/embed?src=8797fb8a8a6876cc331dbee75517b14de8a439e617967c18c8e818824a6f2f7b%40group.calendar.google.com&amp;ctz=Asia%2FTokyo&amp;mode=AGENDA&amp;showTitle=0&amp;showNav=1&amp;showDate=1&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;wkst=1&amp;bgcolor=%23ffffff&amp;color=%23520e1b" style="border: 0" width="100%" height="500" frameborder="0" scrolling="no"></iframe>
+            </div>
+        </section>
+
+        <section>
+            <h2>保護者限定 新着お知らせ</h2>
+            <div id="news-list">
+                <p style="text-align: center; color:#999; font-size:14px;">お知らせを読み込んでいます...</p>
+            </div>
+        </section>
+
+        <section style="padding-top: 30px;">
+            <h2>保護者限定 活動日誌</h2>
+            <details class="purpose-details" open>
+                <summary class="purpose-summary">日誌一覧を開閉</summary>
+                <div id="blog-list" style="margin-top: 24px;">
+                    <p style="text-align: center; color:#999; font-size:14px;">日誌を読み込んでいます...</p>
+                </div>
+            </details>
+        </section>
+
+        <section style="padding-top: 40px;">
+            <h2>現役生の活動の様子（2026年度フォトギャラリー）</h2>
+            <p style="color: #666; font-size: 14px; margin-bottom: 18px;">2026年度の最新活動写真一覧です。</p>
+            <details class="purpose-details" open>
+                <summary class="purpose-summary" style="display:none !important;">開閉</summary>
+                <div class="purpose-content">
+                    <div class="slider-wrapper">
+                        <div class="slider-inner" id="sliderInner">
+                            <p style="text-align:center; padding:50px 0; width:100%; color:#999;">写真を読み込んでいます...</p>
+                        </div>
+                        <button type="button" class="slider-btn slider-prev" onclick="moveSlider(-1); event.stopPropagation();">❮</button>
+                        <button type="button" class="slider-btn slider-next" onclick="moveSlider(1); event.stopPropagation();">❯</button>
+                    </div>
+                </div>
+            </details>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-link-container">
+            <a href="https://www.komagome.ed.jp/" target="_blank" rel="noopener noreferrer" class="school-site-link">
+                学校法人 駒込学園 駒込中学校･高等学校 ↗
+            </a>
+        </div>
+        <p>&copy; 2026 駒込学園吹奏楽部 OB･OG会 All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        const CORRECT_PASSWORD = "KWOnkmnhtnkmtrssds";
+        const microCmsApiKey = "qSJ070NmlfRvReLlVUJ2Lo8lvWdYF0Dle5TC";
+        let allGalleryContents = []; 
+        let currentSlide = 0;
+
+        function moveSlider(direction) {
+            const inner = document.getElementById('sliderInner');
+            const slides = document.querySelectorAll('.slider-item');
+            if (!inner || slides.length === 0) return;
+            currentSlide = (currentSlide + direction + slides.length) % slides.length;
+            inner.style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+
+        function parseYear(item) {
+            if (!item || item.year === undefined || item.year === null) return "";
+            let target = item.year;
+            if (Array.isArray(target)) target = target[0];
+            if (typeof target === 'object' && target !== null) {
+                let val = target.id || target.value || target.name || "";
+                return String(val).trim().replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
+            }
+            return String(target).trim().replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
+        }
+
+        function checkLoginStatus() {
+            const overlay = document.getElementById('login-overlay');
+            if (sessionStorage.getItem('parentStatus') === 'passed') {
+                if (overlay) overlay.style.display = 'none'; 
+            }
+        }
+        checkLoginStatus();
+
+        function loadContent() {
+            fetch("https://komagome-brass-ob.microcms.io/api/v1/news?limit=10", { headers: { "X-MICROCMS-API-KEY": microCmsApiKey } })
+            .then(r => r.json()).then(data => {
+                const list = document.getElementById('news-list');
+                if (!list) return;
+                if (!data.contents || data.contents.length === 0) {
+                    list.innerHTML = '<p style="text-align:center; color:#999; padding:15px 0; font-size:13.5px;">現在、新しいお知らせはありません。</p>'; return;
+                }
+                let html = "";
+                data.contents.forEach(art => {
+                    const d = new Date(art.publishedAt);
+                    const fd = `${d.getFullYear()}年${String(d.getMonth() + 1).padStart(2, '0')}月${String(d.getDate()).padStart(2, '0')}日`;
+                    html += `<div class="post-card news-card"><div class="post-date">${fd}</div><h3 class="post-title">${art.title || ''}</h3><div class="post-content">${art.content}</div></div>`;
+                });
+                list.innerHTML = html;
+            }).catch(() => {
+                document.getElementById('news-list').innerHTML = '<p style="text-align:center; color:#999;">お知らせの取得に失敗しました。</p>';
+            });
+
+            fetch("https://komagome-brass-ob.microcms.io/api/v1/blog?limit=40", { headers: { "X-MICROCMS-API-KEY": microCmsApiKey } })
+            .then(r => r.json()).then(data => {
+                const list = document.getElementById('blog-list');
+                if (!list) return;
+                if (!data.contents || data.contents.length === 0) {
+                    list.innerHTML = '<p style="text-align:center; color:#999; padding:20px 0;">現在、活動日誌はありません。</p>'; return;
+                }
+                let html = "";
+                data.contents.forEach(art => {
+                    const d = new Date(art.date || art.publishedAt);
+                    const fd = `${d.getFullYear()}年${String(d.getMonth() + 1).padStart(2, '0')}月${String(d.getDate()).padStart(2, '0')}日`;
+                    html += `<div class="post-card"><div class="post-date">${fd}</div><h3 class="post-title">${art.title || '無題の日誌'}</h3><div class="post-content">${art.content}</div></div>`;
+                });
+                list.innerHTML = html;
+            }).catch(() => {
+                document.getElementById('blog-list').innerHTML = '<p style="text-align:center; color:#999;">日誌の取得に失敗しました。</p>';
+            });
+
+            fetch("https://komagome-brass-ob.microcms.io/api/v1/gallery?limit=100", { headers: { "X-MICROCMS-API-KEY": microCmsApiKey } })
+            .then(r => r.json()).then(data => {
+                allGalleryContents = data.contents || [];
+                displayGallery2026Only();
+            }).catch(() => {
+                document.getElementById('sliderInner').innerHTML = '<p style="text-align:center; padding:50px 0; width:100%;">写真の読み込みに失敗しました。</p>';
+            });
+        }
+
+        function displayGallery2026Only() {
+            const sliderInner = document.getElementById('sliderInner');
+            if (!sliderInner) return;
+            const filtered = allGalleryContents.filter(item => {
+                return String(parseYear(item)) === "2026";
+            });
+            if (filtered.length === 0) {
+                sliderInner.innerHTML = '<p style="text-align:center; padding:50px 0; width:100%; color:#999;">2026年度の写真はありません。</p>'; return;
+            }
+            let html = "";
+            filtered.forEach(item => {
+                if (item.photo && item.photo.url) {
+                    html += `<div class="slider-item"><img src="${item.photo.url}" alt="${item.title || 'ギャラリー画像'}"><div class="slider-caption">${item.title || ''}</div></div>`;
+                }
+            });
+            sliderInner.innerHTML = html; currentSlide = 0; sliderInner.style.transform = `translateX(0%)`;
+        }
+
+        document.addEventListener("DOMContentLoaded", loadContent);
+
+        function togglePasswordVisibility() {
+            const box = document.getElementById('passwordBox');
+            const icon = document.getElementById('eyeIcon');
+            if (box.type === 'password') { box.type = 'text'; icon.classList.add('hidden-line'); }
+            else { box.type = 'password'; icon.classList.remove('hidden-line'); }
+        }
+
+        function clickLoginButton() {
+            const p = document.getElementById('passwordBox').value.trim();
+            const err = document.getElementById('error-message');
+            const overlay = document.getElementById('login-overlay');
+            if (p === CORRECT_PASSWORD) {
+                sessionStorage.setItem('parentStatus', 'passed');
+                if (overlay) {
+                    overlay.style.opacity = "0"; overlay.style.pointerEvents = "none";
+                    setTimeout(() => { overlay.style.display = 'none'; }, 400);
+                }
+            } else { if (err) err.style.display = 'block'; }
+        }
+        function handleEnter(event) { if (event.key === 'Enter') clickLoginButton(); }
+    </script>
+</body>
+</html>

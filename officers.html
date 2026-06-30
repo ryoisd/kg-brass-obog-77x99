@@ -3,238 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>幹部・役員紹介 - 駒込学園吹奏楽部 OB・OG会</title>
+    <title>幹部･役員紹介 - 駒込学園吹奏楽部 OB･OG会</title>
     <link rel="stylesheet" href="style.css">
-
     <style>
-        /* 隠しチェックボックスは非表示 */
-        #menu-btn-check {
-            display: none !important;
-        }
-
-        /* ハンバーガーメニューのボタン位置設定 */
-        .hamburger-menu {
-            position: absolute !important;
-            top: 50% !important;
-            right: 20px !important;
-            transform: translateY(-50%) !important;
-            z-index: 9999 !important; 
-        }
-
-        .menu-btn {
-            position: fixed !important; 
-            top: 25px !important;
-            right: 25px !important;
-            display: flex !important;
-            height: 50px !important;
-            width: 50px !important;
-            justify-content: center !important;
-            align-items: center !important;
-            background-color: #d4af37 !important;
-            border-radius: 50% !important;
-            cursor: pointer !important;
-            z-index: 9999 !important; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3) !important;
-        }
-
-        /* 三本線（白） */
-        .menu-btn span,
-        .menu-btn span::before,
-        .menu-btn span::after {
-            content: '' !important;
-            display: block !important;
-            height: 3px !important;
-            width: 20px !important;
-            border-radius: 3px !important;
-            background-color: #ffffff !important;
-            position: absolute !important;
-            transition: all 0.3s ease !important;
-        }
-        .menu-btn span::before { bottom: 7px !important; }
-        .menu-btn span::after { top: 7px !important; }
-
-        /* ボタンを押した時に「×」に変形 */
-        #menu-btn-check:checked ~ .menu-btn span {
-            background-color: transparent !important;
-        }
-        #menu-btn-check:checked ~ .menu-btn span::before {
-            bottom: 0 !important;
-            transform: rotate(45deg) !important;
-        }
-        #menu-btn-check:checked ~ .menu-btn span::after {
-            top: 0 !important;
-            transform: rotate(-45deg) !important;
-        }
-
-        /* 引き出しメニュー */
-        .menu-content {
-            position: fixed !important;
-            top: 0 !important;
-            right: -300px !important; 
-            width: 300px !important;   
-            height: 100vh !important;  
-            background-color: #fcfbf9 !important;
-            box-shadow: -5px 0 15px rgba(0,0,0,0.2) !important;
-            transition: right 0.3s ease !important; 
-            z-index: 9998 !important; 
-            overflow-y: auto !important;
-        }
-
-        #menu-btn-check:checked ~ .menu-content {
-            right: 0 !important;
-        }
-
-        .menu-inner {
-            padding: 100px 20px 40px 20px !important;
-        }
-
-        /* ==========================================
-           👥 役員紹介カードを横並びにするCSS
-           ========================================== */
-        .officer-section {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-        .officer-lead {
-            text-align: center;
-            margin: 40px 0 20px 0;
-            color: #333;
-            font-weight: bold;
-            font-size: 16px;
-        }
-        /* 横並びにするための箱 */
-        .officer-grid {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-bottom: 25px;
-        }
-        /* カード1枚ずつのデザイン */
-        .officer-card {
-            flex: 1;
-            max-width: 380px;
-            background-color: #ffffff;
-            border-top: 5px solid #6b1426; /* えんじ色のアクセント */
-            padding: 25px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            text-align: center;
-        }
-        .officer-role {
-            display: inline-block;
-            background-color: #6b1426;
-            color: #fff;
-            padding: 3px 12px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .officer-name {
-            font-size: 20px;
-            margin: 10px 0 5px 0;
-            color: #111;
-        }
-        .officer-info {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 15px;
-        }
-        .officer-message {
-            font-size: 14px;
-            color: #444;
-            line-height: 1.5;
-            border-top: 1px dotted #ccc;
-            padding-top: 15px;
-        }
-
-        /* 📱 スマホ対応（画面が狭いときは縦並びに戻す） */
-        @media screen and (max-width: 600px) {
-            .officer-grid {
-                flex-direction: column;
-                align-items: center;
-            }
-            .officer-card {
-                width: 100%;
-            }
-        }
+        .officer-section { max-width: 800px; margin: 0 auto; }
+        .officer-lead { text-align: center; margin: 30px 0 15px 0; color: #645a5b; font-weight: 500; font-size: 15px; }
+        .officer-grid { display: flex; gap: 24px; justify-content: center; margin-bottom: 40px; flex-wrap: wrap; }
+        .officer-card { flex: 1; min-width: 270px; max-width: 360px; background-color: #ffffff; border: 1px solid rgba(197, 160, 89, 0.15); padding: 32px 24px; border-radius: 14px; box-shadow: var(--card-shadow); text-align: center; transition: transform 0.3s; }
+        .officer-card:hover { transform: translateY(-2px); }
+        .officer-role { display: inline-block; background-color: var(--primary-burgundy); color: #fff; padding: 4px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-bottom: 12px; letter-spacing: 0.05em; }
+        .officer-name { font-size: 19px; margin: 8px 0 4px 0; color: #111; font-weight: 600; }
+        .officer-info { font-size: 13.5px; color: var(--accent-gold); font-weight: 600; margin-bottom: 18px; }
+        .officer-message { font-size: 13.5px; color: #554e4f; line-height: 1.65; background-color: #fdfdfd; padding: 14px; border-radius: 8px; border: 1px solid #f2effa; text-align: left; position: relative; }
+        @media screen and (max-width: 750px) { .officer-grid { flex-direction: column; align-items: center; gap: 16px; } .officer-card { width: 100%; } }
     </style>
-    
     <script>
-        if (sessionStorage.getItem('loginStatus') !== 'passed') {
+        if (sessionStorage.getItem('loginStatus') !== 'passed' && sessionStorage.getItem('parentStatus') !== 'passed') {
             window.location.replace("index.html");
         }
     </script>
 </head>
 <body>
 
-    <header class="site-header">
-        <div class="header-title-container">
-            <h1>幹部・役員紹介</h1>
+    <input type="checkbox" id="menu-btn-check">
+    <label for="menu-btn-check" class="menu-btn"><span></span></label>
+    
+    <div class="menu-content">
+        <div class="menu-inner">
+            <nav class="menu-nav">
+                <ul>
+                    <li><a href="index.html">ホーム（一般公開）</a></li>
+                    <li><a href="obog.html">OB･OG専用ページ</a></li>
+                    <li><a href="parents.html">保護者専用ページ</a></li>
+                    <li><a href="history.html">過去の実績</a></li>
+                    <li><a href="officers.html">幹部･役員紹介</a></li>
+                </ul>
+            </nav>
         </div>
-        
-        <input type="checkbox" id="menu-btn-check">
-        <label for="menu-btn-check" class="menu-btn"><span></span></label>
-        <div class="menu-content">
-            <div class="menu-inner">
-                <nav class="menu-nav">
-                    <ul>
-                        <li><a href="index.html">🏠 ホーム</a></li>
-                        <li><a href="history.html">🎼 過去のコンクール実績</a></li>
-                        <li><a href="officers.html">👥 幹部・役員紹介</a></li>
-                    </ul>
-                </nav>
-            </div>
+    </div>
+
+    <!-- ヘッダーを1枚の画像画像に変更 -->
+    <header class="site-header">
+        <div class="header-bg-slider active-bg" style="background-image: url('images/header.jpg');"></div>
+        <div class="header-title-container">
+            <h1>幹部･役員紹介</h1>
         </div>
     </header>
 
     <main>
-        <section class="officer-section">
-            
-            <p class="officer-lead">本会を運営している幹部メンバーです。よろしくお願いいたします！</p>
+        <section class="officer-section" style="border: none; padding: 0 !important; background: transparent !important; box-shadow: none !important;">
+            <p class="officer-lead">OB･OG会を運営･統括している役員メンバーです。</p>
             <div class="officer-grid">
                 <div class="officer-card">
                     <div class="officer-role">会長</div>
                     <h3 class="officer-name">石田 諒</h3>
                     <p class="officer-info">2026年卒 ／ トロンボーン</p>
-                    <p class="officer-message">「私の駒込愛とともに、KWOの縦のつながりを広げていきたいと考えています！」</p>
+                    <p class="officer-message">「強い駒込愛とともに、KWOの歴史的な縦のつながりをさらに広げていきたいと考えています」</p>
                 </div>
 
                 <div class="officer-card">
                     <div class="officer-role">副会長</div>
                     <h3 class="officer-name">駒込 太郎</h3>
                     <p class="officer-info">2020年卒 ／ クラリネット</p>
-                    <p class="officer-message">「定期演奏会のOB合同ステージなど、皆様が楽しめる企画をたくさん作っていきたいです！」</p>
+                    <p class="officer-message">「定期演奏会のOB合同ステージなど、皆様が再び演奏を楽しめる企画を誠心誠意作ってまいります」</p>
                 </div>
             </div>
 
-            <p class="officer-lead">今年度のKWOを運営している幹部メンバーを紹介します。</p>
+            <p class="officer-lead">現役部員を牽引する今年度の学生幹部メンバーです。</p>
             <div class="officer-grid">
                 <div class="officer-card">
                     <div class="officer-role">部長</div>
-                    <h3 class="officer-name">塩谷穂夏</h3>
+                    <h3 class="officer-name">塩屋穂夏</h3>
                     <p class="officer-info">コントラバス</p>
-                    <p class="officer-message">「OB・OGの方にも協力をいただいて部活を運営していきたいと考えていますので、よろしくお願いいたします！」</p>
+                    <p class="officer-message">「多くのOB･OGの皆様、保護者の皆様の支えに日々感謝し、愛される部活を目指して全力で運営してまいります」</p>
                 </div>
 
                 <div class="officer-card">
                     <div class="officer-role">副部長</div>
                     <h3 class="officer-name">南谷未來</h3>
                     <p class="officer-info">トランペット</p>
-                    <p class="officer-message">「野球応援や現役部員への指導など、よろしくお願いします！」</p>
+                    <p class="officer-message">「野球応援や式典、コンクールへの挑戦に向けて日々の練習を全力で支えます。よろしくお願いいたします！」</p>
                 </div>
             </div>
 
             <p style="text-align: center; margin-top: 50px;">
-                <a href="index.html" style="color: #6b1426; font-weight: bold; text-decoration: none;">← トップページに戻る</a>
+                <a href="index.html" style="color: var(--primary-burgundy); font-weight: 600; text-decoration: none; font-size:14.5px;">← トップページに戻る</a>
             </p>
         </section>
     </main>
 
     <footer>
-        <p>&copy; 2026 駒込学園 吹奏楽部 OB・OG会 All Rights Reserved.</p>
+        <div class="footer-link-container">
+            <a href="https://www.komagome.ed.jp/" target="_blank" rel="noopener noreferrer" class="school-site-link">
+                学校法人 駒込学園 駒込中学校･高等学校 ↗
+            </a>
+        </div>
+        <p>&copy; 2026 駒込学園吹奏楽部 OB･OG会 All Rights Reserved.</p>
     </footer>
-
 </body>
 </html>

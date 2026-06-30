@@ -3,261 +3,229 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>過去のコンクール実績 - 駒込学園吹奏楽部 OB・OG会</title>
+    <title>過去の実績 - 駒込学園吹奏楽部 OB･OG会</title>
     <link rel="stylesheet" href="style.css">
-
     <style>
-        /* 隠しチェックボックスは非表示 */
-        #menu-btn-check {
-            display: none !important;
-        }
-
-        /* ハンバーガーメニューのボタン位置設定 */
-        .hamburger-menu {
-            position: absolute !important;
-            top: 50% !important;
-            right: 20px !important;
-            transform: translateY(-50%) !important;
-            z-index: 9999 !important; 
-        }
-
-        .menu-btn {
-            position: fixed !important; 
-            top: 25px !important;
-            right: 25px !important;
-            display: flex !important;
-            height: 50px !important;
-            width: 50px !important;
-            justify-content: center !important;
-            align-items: center !important;
-            background-color: #d4af37 !important;
-            border-radius: 50% !important;
-            cursor: pointer !important;
-            z-index: 9999 !important; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3) !important;
-        }
-
-        /* 三本線（白） */
-        .menu-btn span,
-        .menu-btn span::before,
-        .menu-btn span::after {
-            content: '' !important;
-            display: block !important;
-            height: 3px !important;
-            width: 20px !important;
-            border-radius: 3px !important;
-            background-color: #ffffff !important;
-            position: absolute !important;
-            transition: all 0.3s ease !important;
-        }
-        .menu-btn span::before { bottom: 7px !important; }
-        .menu-btn span::after { top: 7px !important; }
-
-        /* ボタンを押した時に「×」に変形 */
-        #menu-btn-check:checked ~ .menu-btn span {
-            background-color: transparent !important;
-        }
-        #menu-btn-check:checked ~ .menu-btn span::before {
-            bottom: 0 !important;
-            transform: rotate(45deg) !important;
-        }
-        #menu-btn-check:checked ~ .menu-btn span::after {
-            top: 0 !important;
-            transform: rotate(-45deg) !important;
-        }
-
-        /* 引き出しメニュー */
-        .menu-content {
-            position: fixed !important;
-            top: 0 !important;
-            right: -300px !important; 
-            width: 300px !important;   
-            height: 100vh !important;  
-            background-color: #fcfbf9 !important;
-            box-shadow: -5px 0 15px rgba(0,0,0,0.2) !important;
-            transition: right 0.3s ease !important; 
-            z-index: 9998 !important; 
-            overflow-y: auto !important;
-        }
-
-        #menu-btn-check:checked ~ .menu-content {
-            right: 0 !important;
-        }
-
-        .menu-inner {
-            padding: 100px 20px 40px 20px !important;
-        }
-
-        /* ==========================================
-           📊 実績テーブル（表）の綺麗にするCSS
-           ========================================== */
-        .history-section {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-        .history-table-container {
-            width: 100%;
-            overflow-x: auto; /* スマホで表がはみ出た時に横スクロールできるようにする */
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-        .history-table {
-            width: 100%;
-            border-collapse: collapse; /* 線の隙間をなくす */
-            text-align: left;
-            font-size: 15px;
-        }
-        .history-table th, 
-        .history-table td {
-            padding: 15px;
-            border-bottom: 1px solid #eeeeee;
-        }
-        /* 表のヘッダー（一番上の見出し） */
-        .history-table th {
-            background-color: #6b1426; /* 学園カラーのエンジ色 */
-            color: #ffffff;
-            font-weight: bold;
-            white-space: nowrap;
-        }
-        /* 年度の列を少し強調 */
-        .year-cell {
-            font-weight: bold;
-            color: #6b1426;
-            white-space: nowrap;
-        }
-        /* 出場組の列 */
-        .group-cell {
-            white-space: nowrap;
-            color: #555555;
-        }
-        /* 各賞のバッジ風デザイン */
-        .award-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 13px;
-            text-align: center;
-        }
-        .award-gold { background-color: #fceecb; color: #bfa030; } /* 金賞 */
-        .award-silver { background-color: #e2e8f0; color: #64748b; } /* 銀賞 */
-        .award-bronze { background-color: #ffedd5; color: #ea580c; } /* 銅賞 */
-        .award-none { background-color: #f1f5f9; color: #94a3b8; } /* その他 */
-        .cancel-text { color: #999999; font-style: italic; font-size: 14px; }
-
-        /* 行にマウスを乗せたときにふわっと色を変える */
-        .history-table tr:hover {
-            background-color: #fffaf0;
-        }
+        .history-section { max-width: 900px; margin: 0 auto; }
+        .tab-menu { display: flex; justify-content: center; gap: 8px; margin-bottom: 35px; list-style: none; padding: 0; }
+        .tab-btn { background-color: transparent; color: #645a5b; border: 1px solid #e2e0dc; padding: 10px 24px; font-size: 14.5px; font-weight: 500; border-radius: 25px; cursor: pointer; transition: all 0.3s var(--easing-smooth); flex: 1; max-width: 160px; text-align: center; }
+        .tab-btn:hover { border-color: var(--accent-gold); color: var(--accent-gold); background-color: #faf9f6; }
+        .tab-btn.active-tab { background-color: var(--primary-burgundy); color: #ffffff; border-color: var(--primary-burgundy); box-shadow: 0 4px 12px rgba(82,14,27,0.15); }
+        .history-content { display: none; }
+        .history-content.active-content { display: block; animation: refinedFadeIn 0.5s var(--easing-smooth); }
+        .history-table-container { width: 100%; overflow-x: auto; background-color: #ffffff; border-radius: 12px; margin-top: 15px; border: 1px solid #f0ede9; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02); }
+        .history-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14.5px; }
+        .history-table th, .history-table td { padding: 16px 20px; border-bottom: 1px solid #f2effa; }
+        .history-table th { background-color: #faf9f6; color: var(--primary-burgundy); font-weight: 600; white-space: nowrap; border-bottom: 2px solid rgba(197, 160, 89, 0.2); }
+        .year-cell { font-weight: 600; color: var(--primary-burgundy); white-space: nowrap; }
+        .group-cell { white-space: nowrap; color: #61595a; }
+        .award-badge { display: inline-block; padding: 3px 12px; border-radius: 4px; font-weight: 600; font-size: 12.5px; text-align: center; letter-spacing: 0.03em; }
+        .award-gold { background-color: #fbf5e6; color: #a38132; border: 1px solid rgba(163,129,50,0.15); }
+        .award-silver { background-color: #f1f3f5; color: #495057; border: 1px solid rgba(0,0,0,0.05); }
+        .award-bronze { background-color: #fef3eb; color: #c46624; border: 1px solid rgba(196,102,36,0.15); }
+        .award-none { background-color: #f8f9fa; color: #868e96; }
+        .cancel-text { color: #acb5bd; font-style: italic; font-size: 13.5px; }
+        .history-table tr:hover { background-color: #fefdfb; }
     </style>
-    
     <script>
-        if (sessionStorage.getItem('loginStatus') !== 'passed') {
+        if (sessionStorage.getItem('loginStatus') !== 'passed' && sessionStorage.getItem('parentStatus') !== 'passed') {
             window.location.replace("index.html");
         }
     </script>
 </head>
 <body>
 
-    <header class="site-header">
-        <div class="header-title-container">
-            <h1>過去のコンクール実績</h1>
+    <input type="checkbox" id="menu-btn-check">
+    <label for="menu-btn-check" class="menu-btn"><span></span></label>
+    
+    <div class="menu-content">
+        <div class="menu-inner">
+            <nav class="menu-nav">
+                <ul>
+                    <li><a href="index.html">ホーム（一般公開）</a></li>
+                    <li><a href="obog.html">OB･OG専用ページ</a></li>
+                    <li><a href="parents.html">保護者専用ページ</a></li>
+                    <li><a href="history.html">過去の実績</a></li>
+                    <li><a href="officers.html">幹部･役員紹介</a></li>
+                </ul>
+            </nav>
         </div>
-        
-        <input type="checkbox" id="menu-btn-check">
-        <label for="menu-btn-check" class="menu-btn"><span></span></label>
-        <div class="menu-content">
-            <div class="menu-inner">
-                <nav class="menu-nav">
-                    <ul>
-                        <li><a href="index.html">🏠 ホーム</a></li>
-                        <li><a href="history.html">🎼 過去のコンクール実績</a></li>
-                        <li><a href="officers.html">👥 幹部・役員紹介</a></li>
-                    </ul>
-                </nav>
-            </div>
+    </div>
+
+    <!-- ヘッダーを1枚の画像画像に変更 -->
+    <header class="site-header">
+        <div class="header-bg-slider active-bg" style="background-image: url('images/header.jpg');"></div>
+        <div class="header-title-container">
+            <h1>過去の実績･歩み</h1>
         </div>
     </header>
 
     <main>
-        <section class="history-section">
-            <h2>🏆 東京都高等学校吹奏楽コンクールの実績</h2>
-            <p style="margin-bottom: 25px; color: #666;">駒込学園吹奏楽部（KWO）がこれまでに挑んできたコンクールの全記録です。</p>
-            
-            <div class="history-table-container">
-                <table class="history-table">
-                    <thead>
-                        <tr>
-                            <th>年度</th>
-                            <th>出場部門・組</th>
-                            <th>演奏曲</th>
-                            <th>結果</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="year-cell">2025年</td>
-                            <td class="group-cell">B組</td>
-                            <td>レパントの海戦</td>
-                            <td><span class="award-badge award-silver">銀賞</span></td>
-                        </tr>
-                        <tr>
-                            <td class="year-cell">2024年</td>
-                            <td class="group-cell">東日本組</td>
-                            <td>死の舞踏</td>
-                            <td><span class="award-badge award-silver">銀賞</span></td>
-                        </tr>
-                        <tr>
-                            <td class="year-cell">2023年</td>
-                            <td class="group-cell">B組</td>
-                            <td>喜歌劇「チャルダッシュの女王」セレクション</td>
-                            <td><span class="award-badge award-silver">銀賞</span></td>
-                        </tr>
-                        <tr>
-                            <td class="year-cell">2022年</td>
-                            <td class="group-cell">A組</td>
-                            <td>課題曲：ブルースプリング<br>自由曲：シー・オブ・ウィズダム～知恵を持つ海～</td>
-                            <td><span class="award-badge award-bronze">銅賞</span></td>
-                        </tr>
-                        <tr>
-                            <td class="year-cell">2021年</td>
-                            <td class="group-cell">B組</td>
-                            <td>鳥之石楠船神</td>
-                            <td><span class="award-badge award-none">銀賞</span></td>
-                        </tr>
-                        <tr>
-                            <td class="year-cell">2020年</td>
-                            <td class="group-cell">-</td>
-                            <td>三日月の彼方</td>
-                            <td class="cancel-text">＊コンクール中止</td>
-                        </tr>
-                        <tr>
-                            <td class="year-cell">2019年</td>
-                            <td class="group-cell">BⅡ組</td>
-                            <td>梁塵秘抄～熊野古道の幻想～</td>
-                            <td><span class="award-badge award-gold">金賞</span></td>
-                        </tr>
-                        <tr>
-                            <td class="year-cell">2018年</td>
-                            <td class="group-cell">BⅡ組</td>
-                            <td>吹奏楽ための「ランドスケープ」</td>
-                            <td><span class="award-badge award-silver">銀賞</span></td>
-                        </tr>
-                    </tbody>
-                </table>
+        <section class="history-section" style="border: none; padding: 0 !important; background: transparent !important; box-shadow: none !important;">
+            <ul class="tab-menu">
+                <li class="tab-btn active-tab" onclick="switchTab(0)">コンクール</li>
+                <li class="tab-btn" onclick="switchTab(1)">定期演奏会</li>
+                <li class="tab-btn" onclick="switchTab(2)">文化祭公演</li>
+            </ul>
+
+            <div class="history-content active-content">
+                <div style="background:#fff; padding:36px; border-radius:16px; box-shadow: var(--card-shadow); border: 1px solid rgba(82, 14, 27, 0.03);">
+                    <h2>全日本吹奏楽コンクール 実績</h2>
+                    <p style="color: #666; font-size:14px; margin-bottom: 20px;">東京都吹奏楽コンクールにおけるKWOの受賞および軌跡の記録です。</p>
+                    <div class="history-table-container">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>年度</th>
+                                    <th>出場部門</th>
+                                    <th>演奏曲</th>
+                                    <th>結果</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="year-cell">2025年</td>
+                                    <td class="group-cell">B組</td>
+                                    <td>レパントの海戦</td>
+                                    <td><span class="award-badge award-silver">銀賞</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="year-cell">2024年</td>
+                                    <td class="group-cell">東日本組</td>
+                                    <td>死の舞踏</td>
+                                    <td><span class="award-badge award-silver">銀賞</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="year-cell">2023年</td>
+                                    <td class="group-cell">B組</td>
+                                    <td>喜歌劇「チャルダッシュの女王」セレクション</td>
+                                    <td><span class="award-badge award-silver">銀賞</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="year-cell">2022年</td>
+                                    <td class="group-cell">A組</td>
+                                    <td>課題曲：ブルースプリング<br>自由曲：シー･オブ･ウィズダム～知恵を持つ海～</td>
+                                    <td><span class="award-badge award-bronze">銅賞</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="year-cell">2021年</td>
+                                    <td class="group-cell">-</td>
+                                    <td>鳥之石楠船神</td>
+                                    <td><span class="award-badge award-none">出場</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="year-cell">2020年</td>
+                                    <td class="group-cell">-</td>
+                                    <td>三日月の彼方</td>
+                                    <td class="cancel-text">＊コンクール中止</td>
+                                </tr>
+                                <tr>
+                                    <td class="year-cell">2019年</td>
+                                    <td class="group-cell">BⅡ組</td>
+                                    <td>梁塵秘抄～熊野古道の幻想～</td>
+                                    <td><span class="award-badge award-gold">金賞</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="year-cell">2018年</td>
+                                    <td class="group-cell">BⅡ組</td>
+                                    <td>吹奏楽ための「ランドスケープ」</td>
+                                    <td><span class="award-badge award-silver">銀賞</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="history-content">
+                <div style="background:#fff; padding:36px; border-radius:16px; box-shadow: var(--card-shadow); border: 1px solid rgba(82, 14, 27, 0.03);">
+                    <h2>定期演奏会の歩み</h2>
+                    <p style="color: #666; font-size:14px; margin-bottom: 20px;">毎年春に開催される、吹奏楽部最大のメインステージの歴史です。</p>
+                    <div class="history-table-container">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>回数 / 年度</th>
+                                    <th>開催日 / 会場</th>
+                                    <th>主な演奏演目･OB合同曲</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="year-cell">第40回（2025年度）</td>
+                                    <td>2026年3月 / サンパール荒川</td>
+                                    <td>「アルメニアン･ダンス Part I」 / OB合同：行進曲「高砂」</td>
+                                </tr>
+                                <tr>
+                                    <td class="year-cell">第39回（2024年度）</td>
+                                    <td>2025年3月 / かつしかシンフォニーヒルズ</td>
+                                    <td>「宇宙の音楽」 / OB合同：宝島</td>
+                                </tr>
+                                <tr>
+                                    <td class="year-cell">第38回（2023年度）</td>
+                                    <td>2024年3月 / サンパール荒川</td>
+                                    <td>「マカーム･ダンス」 / OB合同：エル･クンバンチェロ</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="history-content">
+                <div style="background:#fff; padding:36px; border-radius:16px; box-shadow: var(--card-shadow); border: 1px solid rgba(82, 14, 27, 0.03);">
+                    <h2>文化祭公演（駒込祭）の実績</h2>
+                    <p style="color: #666; font-size:14px; margin-bottom: 20px;">もっとも熱気に包まれる秋の駒込祭特設ステージの記録です。</p>
+                    <div class="history-table-container">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>年度</th>
+                                    <th>公演場所</th>
+                                    <th>ポップス･メイン演奏曲</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="year-cell">2025年度</td>
+                                    <td>大体育館特設ステージ</td>
+                                    <td>ディズニープリンセスメドレー、学園天国、マツケンサンバII</td>
+                                </tr>
+                                <tr>
+                                    <td class="year-cell">2024年度</td>
+                                    <td>大体育館特設ステージ</td>
+                                    <td>J-POPヒットメドレー、新時代、風になりたい</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
             
             <p style="text-align: center; margin-top: 50px;">
-                <a href="index.html" style="color: #6b1426; font-weight: bold; text-decoration: none;">← トップページに戻る</a>
+                <a href="index.html" style="color: var(--primary-burgundy); font-weight: 600; text-decoration: none; font-size:14.5px;">← トップページに戻る</a>
             </p>
         </section>
     </main>
 
     <footer>
-        <p>&copy; 2026 駒込学園 吹奏楽部 OB・OG会 All Rights Reserved.</p>
+        <div class="footer-link-container">
+            <a href="https://www.komagome.ed.jp/" target="_blank" rel="noopener noreferrer" class="school-site-link">
+                学校法人 駒込学園 駒込中学校･高等学校 ↗
+            </a>
+        </div>
+        <p>&copy; 2026 駒込学園吹奏楽部 OB･OG会 All Rights Reserved.</p>
     </footer>
 
+    <script>
+        function switchTab(tabIndex) {
+            const buttons = document.querySelectorAll('.tab-btn');
+            const contents = document.querySelectorAll('.history-content');
+            buttons.forEach(btn => btn.classList.remove('active-tab'));
+            contents.forEach(content => content.classList.remove('active-content'));
+            buttons[tabIndex].classList.add('active-tab');
+            contents[tabIndex].classList.add('active-content');
+        }
+    </script>
 </body>
 </html>
